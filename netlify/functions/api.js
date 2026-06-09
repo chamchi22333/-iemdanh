@@ -4,7 +4,6 @@ const path = require("path");
 const core = require("../../server.js");
 
 const TOKEN_SECONDS = 20;
-const SESSION_SECONDS = 180;
 
 exports.handler = async (event) => {
   try {
@@ -32,12 +31,11 @@ exports.handler = async (event) => {
 
       const sessionId = signSession({
         token: incomingToken,
-        expiresAt: Date.now() + SESSION_SECONDS * 1000
+        openedAt: Date.now()
       });
       const html = fs
         .readFileSync(path.join(__dirname, "../../public/checkin.html"), "utf8")
-        .replace("__SESSION_ID__", escapeHtml(sessionId))
-        .replace("__SESSION_SECONDS__", String(SESSION_SECONDS));
+        .replace("__SESSION_ID__", escapeHtml(sessionId));
       return response(200, "text/html; charset=utf-8", html, {
         "Cache-Control": "no-store"
       });
@@ -168,7 +166,7 @@ function verifySession(value) {
 
   try {
     const payload = JSON.parse(Buffer.from(encoded, "base64url").toString("utf8"));
-    if (!payload.expiresAt || payload.expiresAt < Date.now()) return null;
+    if (payload.expiresAt && payload.expiresAt < Date.now()) return null;
     return payload;
   } catch {
     return null;

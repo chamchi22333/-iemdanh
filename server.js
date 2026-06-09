@@ -9,7 +9,6 @@ loadEnvFile(path.join(__dirname, ".env"));
 
 const REQUESTED_PORT = Number(process.env.PORT || 3000);
 const TOKEN_SECONDS = 20;
-const SESSION_SECONDS = 180;
 const DATA_DIR = path.join(__dirname, "data");
 const DATA_FILE = path.join(DATA_DIR, "attendance.json");
 const PUBLIC_DIR = path.join(__dirname, "public");
@@ -51,14 +50,12 @@ const server = http.createServer(async (req, res) => {
       const sessionId = crypto.randomBytes(18).toString("base64url");
       sessions.set(sessionId, {
         token: incomingToken,
-        expiresAt: Date.now() + SESSION_SECONDS * 1000,
         used: false
       });
 
       const html = fs
         .readFileSync(path.join(PUBLIC_DIR, "checkin.html"), "utf8")
-        .replace("__SESSION_ID__", escapeHtml(sessionId))
-        .replace("__SESSION_SECONDS__", String(SESSION_SECONDS));
+        .replace("__SESSION_ID__", escapeHtml(sessionId));
       return send(res, 200, "text/html; charset=utf-8", html);
     }
 
@@ -160,16 +157,15 @@ function isCurrentToken(value) {
 }
 
 function cleanupSessions() {
-  const now = Date.now();
   for (const [id, session] of sessions.entries()) {
-    if (session.expiresAt < now || session.used) sessions.delete(id);
+    if (session.used) sessions.delete(id);
   }
 }
 
 async function addSubmission(body) {
   const sessionId = String(body.sessionId || "");
   const session = sessions.get(sessionId);
-  if (!session || session.expiresAt < Date.now() || session.used) {
+  if (!session || session.used) {
     return { status: 410, payload: { ok: false, message: "Mã điểm danh đã hết hạn. Vui lòng quét lại QR mới." } };
   }
 
