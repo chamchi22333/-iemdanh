@@ -38,7 +38,9 @@ exports.handler = async (event) => {
         .readFileSync(path.join(__dirname, "../../public/checkin.html"), "utf8")
         .replace("__SESSION_ID__", escapeHtml(sessionId))
         .replace("__SESSION_SECONDS__", String(SESSION_SECONDS));
-      return response(200, "text/html; charset=utf-8", html);
+      return response(200, "text/html; charset=utf-8", html, {
+        "Cache-Control": "no-store"
+      });
     }
 
     if (event.httpMethod === "POST" && pathname === "/submit") {

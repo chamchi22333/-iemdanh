@@ -16,8 +16,16 @@
   from = "/checkin"
   to = "/.netlify/functions/api/checkin"
   status = 200
+  force = true
+
+[[redirects]]
+  from = "/checkin.html"
+  to = "/checkin"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/export.xlsx"
   to = "/.netlify/functions/api/export.xlsx"
   status = 200
+  force = true
