@@ -23,8 +23,10 @@ let tokenExpiresAt = 0;
 
 ensureDataFile();
 rotateToken();
-setInterval(rotateToken, TOKEN_SECONDS * 1000);
-setInterval(cleanupSessions, 30 * 1000);
+if (require.main === module) {
+  setInterval(rotateToken, TOKEN_SECONDS * 1000);
+  setInterval(cleanupSessions, 30 * 1000);
+}
 
 let actualPort = REQUESTED_PORT;
 
@@ -116,7 +118,9 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-startServer(REQUESTED_PORT);
+if (require.main === module) {
+  startServer(REQUESTED_PORT);
+}
 
 function startServer(port) {
   actualPort = port;
@@ -863,3 +867,14 @@ function gfMultiply(x, y) {
   }
   return z;
 }
+
+module.exports = {
+  buildXlsx,
+  clearSubmissions,
+  formatTimestamp,
+  hasDuplicateStudentId,
+  qrSvg,
+  readSubmissions,
+  saveSubmission,
+  titleCaseVietnamese
+};

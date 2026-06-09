@@ -1,0 +1,23 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/display"
+  to = "/display.html"
+  status = 200
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/checkin"
+  to = "/.netlify/functions/api/checkin"
+  status = 200
+
+[[redirects]]
+  from = "/export.xlsx"
+  to = "/.netlify/functions/api/export.xlsx"
+  status = 200

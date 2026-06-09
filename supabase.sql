@@ -11,5 +11,27 @@ create table if not exists public.attendance (
 
 alter table public.attendance enable row level security;
 
--- App dung service_role key o server nen van doc/ghi duoc khi RLS bat.
+drop policy if exists "attendance anon select" on public.attendance;
+drop policy if exists "attendance anon insert" on public.attendance;
+drop policy if exists "attendance anon delete" on public.attendance;
+
+create policy "attendance anon select"
+on public.attendance
+for select
+to anon
+using (true);
+
+create policy "attendance anon insert"
+on public.attendance
+for insert
+to anon
+with check (true);
+
+create policy "attendance anon delete"
+on public.attendance
+for delete
+to anon
+using (true);
+
+-- Neu dung SUPABASE_SERVICE_ROLE_KEY tren server thi co the khong can cac policy anon.
 -- Khong dua service_role key vao frontend.
