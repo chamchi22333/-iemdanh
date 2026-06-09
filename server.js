@@ -21,9 +21,9 @@ const sessions = new Map();
 let token = "";
 let tokenExpiresAt = 0;
 
-ensureDataFile();
-rotateToken();
 if (require.main === module) {
+  ensureDataFile();
+  rotateToken();
   setInterval(rotateToken, TOKEN_SECONDS * 1000);
   setInterval(cleanupSessions, 30 * 1000);
 }
@@ -209,7 +209,7 @@ async function addSubmission(body) {
 
 function ensureDataFile() {
   fs.mkdirSync(DATA_DIR, { recursive: true });
-  if (!fs.existsSync(DATA_FILE)) writeSubmissions([]);
+  if (!fs.existsSync(DATA_FILE)) fs.writeFileSync(DATA_FILE, "[]", "utf8");
 }
 
 async function readSubmissions() {
@@ -217,11 +217,16 @@ async function readSubmissions() {
     return readSupabaseSubmissions();
   }
 
+  if (isNetlifyRuntime()) {
+    return [];
+  }
+
   return readLocalSubmissions();
 }
 
 function readLocalSubmissions() {
   try {
+    ensureDataFile();
     const data = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
     return Array.isArray(data) ? data : [];
   } catch {
@@ -230,12 +235,17 @@ function readLocalSubmissions() {
 }
 
 function writeSubmissions(items) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
   fs.writeFileSync(DATA_FILE, JSON.stringify(items, null, 2), "utf8");
 }
 
 async function hasDuplicateStudentId(studentId) {
   if (hasSupabase()) {
     return hasSupabaseStudentId(studentId);
+  }
+
+  if (isNetlifyRuntime()) {
+    return false;
   }
 
   const submissions = readLocalSubmissions();
@@ -245,6 +255,11 @@ async function hasDuplicateStudentId(studentId) {
 async function saveSubmission(item) {
   if (hasSupabase()) {
     return saveSupabaseSubmission(item);
+  }
+
+  if (isNetlifyRuntime()) {
+    console.error("Supabase is not configured in Netlify environment variables.");
+    return { ok: false };
   }
 
   const currentRows = readLocalSubmissions();
@@ -261,11 +276,19 @@ async function clearSubmissions() {
     return;
   }
 
+  if (isNetlifyRuntime()) {
+    return;
+  }
+
   writeSubmissions([]);
 }
 
 function hasSupabase() {
   return Boolean(SUPABASE_URL && SUPABASE_KEY);
+}
+
+function isNetlifyRuntime() {
+  return Boolean(process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME);
 }
 
 async function readSupabaseSubmissions() {
