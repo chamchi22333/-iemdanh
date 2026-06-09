@@ -444,6 +444,7 @@ input:disabled {
   min-height: 0;
   place-items: center;
   padding: clamp(12px, 2vh, 28px) 0;
+  position: relative;
 }
 
 .display-qr img {
@@ -454,6 +455,13 @@ input:disabled {
   border-radius: 8px;
   background: #fff;
   box-shadow: 0 18px 42px rgba(32, 33, 36, 0.16);
+}
+
+.qr-error {
+  margin: 12px 0 0;
+  color: var(--danger);
+  font-weight: 700;
+  text-align: center;
 }
 
 .display-footer {

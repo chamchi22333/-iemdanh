@@ -207,7 +207,9 @@ function response(statusCode, contentType, body, headers = {}) {
 }
 
 function json(statusCode, body) {
-  return response(statusCode, "application/json; charset=utf-8", JSON.stringify(body));
+  return response(statusCode, "application/json; charset=utf-8", JSON.stringify(body), {
+    "Cache-Control": "no-store"
+  });
 }
 
 function escapeHtml(value) {
