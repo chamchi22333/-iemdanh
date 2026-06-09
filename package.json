@@ -1,0 +1,13 @@
+{
+  "name": "diem-danh-hoi-thao",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Trang diem danh hoi thao voi QR doi moi va xuat Excel.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}

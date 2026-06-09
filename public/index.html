@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Điểm danh hội thảo toàn trường</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body class="admin-page">
+    <main>
+      <section id="setupView" class="setup-shell">
+        <div class="meeting-panel setup-card" aria-label="Tạo mã QR điểm danh">
+        <form id="meetingForm" class="meeting-form">
+          <p class="eyebrow">Điểm danh</p>
+          <h1>Tạo mã QR cho cuộc họp</h1>
+          <label>
+            <span>Tên cuộc họp</span>
+            <input id="meetingName" required placeholder="VD: Hội thảo toàn trường">
+          </label>
+          <button class="submit-button" type="submit">Tạo mã</button>
+        </form>
+        </div>
+      </section>
+
+      <section id="recordsView" class="records-view" hidden>
+      <aside class="records-panel records-page-panel" aria-label="Danh sách điểm danh">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Dữ liệu</p>
+            <h2 id="recordsTitle">Tên cuộc họp</h2>
+            <p id="totalCount" class="record-count">0 lượt điểm danh</p>
+          </div>
+          <div class="panel-actions">
+            <button id="openQrButton" type="button">Mở QR</button>
+            <a id="exportLink" class="button primary" href="/export.xlsx">Xuất Excel</a>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Họ và tên</th>
+                <th>Đơn vị</th>
+                <th>Mã sinh viên</th>
+                <th>Xác nhận</th>
+              </tr>
+            </thead>
+            <tbody id="recordsBody">
+              <tr>
+                <td colspan="4" class="empty-cell">Chưa có dữ liệu điểm danh</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="danger-row">
+          <button id="clearData" type="button">Xóa dữ liệu</button>
+        </div>
+      </aside>
+      </section>
+    </main>
+    <script src="/admin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mã QR điểm danh</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body class="display-page">
+    <main class="display-shell">
+      <header class="display-header">
+        <p class="eyebrow">Điểm danh cuộc họp</p>
+        <h1 id="displayMeetingName">Hội thảo toàn trường</h1>
+      </header>
+
+      <section class="display-qr" aria-label="Mã QR điểm danh">
+        <img id="displayQrImage" alt="Mã QR điểm danh đang hoạt động">
+      </section>
+
+      <footer class="display-footer">
+        <time id="displayCountdown" datetime="PT20S">00:20</time>
+      </footer>
+    </main>
+    <script src="/display.js"></script>
+  </body>
+</html>

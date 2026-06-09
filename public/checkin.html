@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Form điểm danh</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body class="form-page">
+    <main class="form-shell">
+      <section class="form-card">
+        <div class="form-top"></div>
+        <div class="form-content">
+          <p class="eyebrow">Hội thảo toàn trường</p>
+          <h1>Form điểm danh</h1>
+          <p class="form-note">Phiên quét mã có hiệu lực trong <span id="sessionSeconds">__SESSION_SECONDS__</span> giây.</p>
+
+          <form id="checkinForm" autocomplete="on">
+            <input type="hidden" id="sessionId" value="__SESSION_ID__">
+
+            <label>
+              <span>Họ và tên <em>(Viết hoa chữ cái đầu)</em></span>
+              <input id="fullName" name="fullName" required placeholder="VD: Nguyễn Văn A">
+            </label>
+
+            <label>
+              <span>Đơn vị</span>
+              <input id="unit" name="unit" required placeholder="VD: Khoa Công trình; Viện Cơ khí động lực">
+            </label>
+
+            <label>
+              <span>Mã sinh viên</span>
+              <input id="studentId" name="studentId" required placeholder="VD: 74DCHL2122">
+            </label>
+
+            <label class="check-row">
+              <input id="confirmed" name="confirmed" type="checkbox" required>
+              <span>Xác nhận tham gia: Có</span>
+            </label>
+
+            <p id="message" class="message" role="status"></p>
+            <button class="submit-button" type="submit">Gửi điểm danh</button>
+          </form>
+        </div>
+      </section>
+    </main>
+    <script src="/form.js"></script>
+  </body>
+</html>
