@@ -1,6 +1,4 @@
 const crypto = require("crypto");
-const fs = require("fs");
-const path = require("path");
 const core = require("../../server.js");
 
 const TOKEN_SECONDS = 20;
@@ -25,18 +23,16 @@ exports.handler = async (event) => {
     if (event.httpMethod === "GET" && pathname === "/checkin") {
       const incomingToken = url.searchParams.get("t") || "";
       if (!isCurrentToken(incomingToken)) {
-        const expired = fs.readFileSync(path.join(__dirname, "../../public/expired.html"), "utf8");
-        return response(410, "text/html; charset=utf-8", expired);
+        return response(410, "text/html; charset=utf-8", expiredHtml(), {
+          "Cache-Control": "no-store"
+        });
       }
 
       const sessionId = signSession({
         token: incomingToken,
         openedAt: Date.now()
       });
-      const html = fs
-        .readFileSync(path.join(__dirname, "../../public/checkin.html"), "utf8")
-        .replace("__SESSION_ID__", escapeHtml(sessionId));
-      return response(200, "text/html; charset=utf-8", html, {
+      return response(200, "text/html; charset=utf-8", checkinHtml(sessionId), {
         "Cache-Control": "no-store"
       });
     }
@@ -218,4 +214,76 @@ function escapeHtml(value) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+function checkinHtml(sessionId) {
+  return `<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Form điểm danh</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body class="form-page">
+    <main class="form-shell">
+      <section class="form-card">
+        <div class="form-top"></div>
+        <div class="form-content">
+          <form id="checkinForm" autocomplete="on">
+            <input type="hidden" id="sessionId" value="${escapeHtml(sessionId)}">
+
+            <label>
+              <span>Họ và tên <em>(Viết hoa chữ cái đầu)</em></span>
+              <input id="fullName" name="fullName" required placeholder="VD: Nguyễn Văn A">
+            </label>
+
+            <label>
+              <span>Đơn vị</span>
+              <input id="unit" name="unit" required placeholder="VD: Khoa Công trình; Viện Cơ khí động lực">
+            </label>
+
+            <label>
+              <span>Mã sinh viên</span>
+              <input id="studentId" name="studentId" required placeholder="VD: 74DCHL2122">
+            </label>
+
+            <label class="check-row">
+              <input id="confirmed" name="confirmed" type="checkbox" required>
+              <span>Xác nhận tham gia: Có</span>
+            </label>
+
+            <p id="message" class="message" role="status"></p>
+            <button class="submit-button" type="submit">Gửi điểm danh</button>
+          </form>
+        </div>
+      </section>
+    </main>
+    <script src="/form.js"></script>
+  </body>
+</html>`;
+}
+
+function expiredHtml() {
+  return `<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mã QR hết hạn</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body class="form-page">
+    <main class="form-shell">
+      <section class="form-card compact">
+        <div class="form-top"></div>
+        <div class="form-content">
+          <p class="eyebrow">Mã QR hết hạn</p>
+          <h1>Vui lòng quét mã mới</h1>
+          <p class="form-note">Mã QR điểm danh được đổi mỗi 20 giây để hạn chế điểm danh hộ.</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>`;
 }
