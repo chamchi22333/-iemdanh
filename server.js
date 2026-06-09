@@ -12,8 +12,10 @@ const TOKEN_SECONDS = 20;
 const DATA_DIR = path.join(__dirname, "data");
 const DATA_FILE = path.join(DATA_DIR, "attendance.json");
 const PUBLIC_DIR = path.join(__dirname, "public");
-const SUPABASE_URL = (process.env.SUPABASE_URL || "").replace(/\/$/, "");
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_ANON_KEY || "";
+const DEFAULT_SUPABASE_URL = "https://xhqizslrurmxvoqgaglx.supabase.co";
+const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhocWl6c2xydXJteHZvcWdhZ2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTcxNTMsImV4cCI6MjA5NjU5MzE1M30.QvDQoy3q8kwswfuaY0eIOkRMr9raWpMa2WOtYrCKAdI";
+const SUPABASE_URL = (process.env.SUPABASE_URL || DEFAULT_SUPABASE_URL).replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
 const SUPABASE_TABLE = process.env.SUPABASE_TABLE || "attendance";
 
 const sessions = new Map();
@@ -255,7 +257,7 @@ async function saveSubmission(item) {
 
   if (isNetlifyRuntime()) {
     console.error("Supabase is not configured in Netlify environment variables.");
-    return { ok: false };
+    return { ok: false, reason: "supabase_missing" };
   }
 
   const currentRows = readLocalSubmissions();
@@ -308,8 +310,12 @@ async function saveSupabaseSubmission(item) {
     if (error.status === 409 || /duplicate key/i.test(error.message || "")) {
       return { ok: false, duplicate: true };
     }
+    if (error.status === 401 || error.status === 403 || /row-level security|42501|permission denied/i.test(error.message || "")) {
+      console.error(error);
+      return { ok: false, reason: "supabase_policy", detail: error.message };
+    }
     console.error(error);
-    return { ok: false };
+    return { ok: false, reason: "supabase_error", detail: error.message };
   }
 }
 

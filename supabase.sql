@@ -11,6 +11,10 @@ create table if not exists public.attendance (
 
 alter table public.attendance enable row level security;
 
+grant usage on schema public to anon;
+grant select, insert, delete on table public.attendance to anon;
+grant usage, select on sequence public.attendance_id_seq to anon;
+
 drop policy if exists "attendance anon select" on public.attendance;
 drop policy if exists "attendance anon insert" on public.attendance;
 drop policy if exists "attendance anon delete" on public.attendance;

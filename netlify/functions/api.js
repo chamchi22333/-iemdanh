@@ -115,6 +115,12 @@ async function submitAttendance(body) {
     if (saved.duplicate) {
       return { status: 409, payload: { ok: false, message: "Mã sinh viên này đã được điểm danh." } };
     }
+    if (saved.reason === "supabase_missing") {
+      return { status: 500, payload: { ok: false, message: "Chưa cấu hình Supabase cho Netlify." } };
+    }
+    if (saved.reason === "supabase_policy") {
+      return { status: 500, payload: { ok: false, message: "Supabase chưa cấp quyền ghi dữ liệu. Hãy chạy lại file supabase.sql." } };
+    }
     return { status: 500, payload: { ok: false, message: "Không lưu được dữ liệu điểm danh. Vui lòng thử lại." } };
   }
 
