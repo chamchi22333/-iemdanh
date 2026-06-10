@@ -176,10 +176,9 @@ async function addSubmission(body) {
   const studentId = String(body.studentId || "").trim().toUpperCase();
   const className = String(body.className || "").trim();
   const participationMode = normalizeParticipationMode(body.participationMode);
-  const confirmed = body.confirmed === true;
 
-  if (!fullName || !unit || !studentId || !className || !participationMode || !confirmed) {
-    return { status: 400, payload: { ok: false, message: "Vui lòng nhập đủ thông tin và tích xác nhận tham gia." } };
+  if (!fullName || !unit || !studentId || !className || !participationMode) {
+    return { status: 400, payload: { ok: false, message: "Vui lòng nhập đủ thông tin." } };
   }
 
   const duplicate = await hasDuplicateStudentId(studentId);

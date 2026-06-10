@@ -94,10 +94,9 @@ async function submitAttendance(body) {
   const studentId = String(body.studentId || "").trim().toUpperCase();
   const className = String(body.className || "").trim();
   const participationMode = core.normalizeParticipationMode(body.participationMode);
-  const confirmed = body.confirmed === true;
 
-  if (!fullName || !unit || !studentId || !className || !participationMode || !confirmed) {
-    return { status: 400, payload: { ok: false, message: "Vui lòng nhập đủ thông tin và tích xác nhận tham gia." } };
+  if (!fullName || !unit || !studentId || !className || !participationMode) {
+    return { status: 400, payload: { ok: false, message: "Vui lòng nhập đủ thông tin." } };
   }
 
   if (await core.hasDuplicateStudentId(studentId)) {
@@ -274,11 +273,6 @@ function checkinHtml(sessionId) {
                 <span>Trực tuyến (online)</span>
               </label>
             </div>
-
-            <label class="check-row">
-              <input id="confirmed" name="confirmed" type="checkbox" required>
-              <span>Xác nhận tham gia: Có</span>
-            </label>
 
             <p id="message" class="message" role="status"></p>
             <button class="submit-button" type="submit">Gửi điểm danh</button>

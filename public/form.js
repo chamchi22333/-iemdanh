@@ -34,8 +34,7 @@ form.addEventListener("submit", async (event) => {
     unit: document.querySelector("#unit").value.trim(),
     studentId: studentId.value.trim().toUpperCase(),
     className: className.value.trim(),
-    participationMode: selectedParticipation ? selectedParticipation.value : "",
-    confirmed: document.querySelector("#confirmed").checked
+    participationMode: selectedParticipation ? selectedParticipation.value : ""
   };
 
   const button = form.querySelector("button");
