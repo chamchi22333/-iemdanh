@@ -25,7 +25,7 @@ async function refreshState() {
 
 function renderRows(rows) {
   if (!rows.length) {
-    recordsBody.innerHTML = `<tr><td colspan="4" class="empty-cell">Chưa có dữ liệu điểm danh</td></tr>`;
+    recordsBody.innerHTML = `<tr><td colspan="6" class="empty-cell">Chưa có dữ liệu điểm danh</td></tr>`;
     return;
   }
 
@@ -37,6 +37,8 @@ function renderRows(rows) {
         <td>${escapeHtml(row.fullName)}</td>
         <td>${escapeHtml(row.unit)}</td>
         <td>${escapeHtml(row.studentId)}</td>
+        <td>${escapeHtml(row.className || "")}</td>
+        <td>${escapeHtml(row.participationMode || "")}</td>
         <td>${escapeHtml(row.confirmed)}</td>
       </tr>
     `)

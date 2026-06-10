@@ -2,6 +2,8 @@ const form = document.querySelector("#checkinForm");
 const message = document.querySelector("#message");
 const fullName = document.querySelector("#fullName");
 const studentId = document.querySelector("#studentId");
+const className = document.querySelector("#className");
+const participationInputs = Array.from(document.querySelectorAll('input[name="participationMode"]'));
 
 fullName.addEventListener("blur", () => {
   fullName.value = titleCaseVietnamese(fullName.value);
@@ -11,16 +13,28 @@ studentId.addEventListener("input", () => {
   studentId.value = studentId.value.toUpperCase().replace(/\s/g, "");
 });
 
+participationInputs.forEach((input) => {
+  input.addEventListener("change", () => {
+    if (!input.checked) return;
+    participationInputs.forEach((otherInput) => {
+      if (otherInput !== input) otherInput.checked = false;
+    });
+  });
+});
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   message.textContent = "";
   message.className = "message";
 
+  const selectedParticipation = participationInputs.find((input) => input.checked);
   const payload = {
     sessionId: document.querySelector("#sessionId").value,
     fullName: titleCaseVietnamese(fullName.value),
     unit: document.querySelector("#unit").value.trim(),
     studentId: studentId.value.trim().toUpperCase(),
+    className: className.value.trim(),
+    participationMode: selectedParticipation ? selectedParticipation.value : "",
     confirmed: document.querySelector("#confirmed").checked
   };
 

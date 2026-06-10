@@ -92,9 +92,11 @@ async function submitAttendance(body) {
   const fullName = core.titleCaseVietnamese(String(body.fullName || "").trim());
   const unit = String(body.unit || "").trim();
   const studentId = String(body.studentId || "").trim().toUpperCase();
+  const className = String(body.className || "").trim();
+  const participationMode = core.normalizeParticipationMode(body.participationMode);
   const confirmed = body.confirmed === true;
 
-  if (!fullName || !unit || !studentId || !confirmed) {
+  if (!fullName || !unit || !studentId || !className || !participationMode || !confirmed) {
     return { status: 400, payload: { ok: false, message: "Vui lòng nhập đủ thông tin và tích xác nhận tham gia." } };
   }
 
@@ -107,6 +109,8 @@ async function submitAttendance(body) {
     fullName,
     unit,
     studentId,
+    className,
+    participationMode,
     confirmed: "Có"
   };
 
@@ -253,6 +257,23 @@ function checkinHtml(sessionId) {
               <span>Mã sinh viên</span>
               <input id="studentId" name="studentId" required placeholder="VD: 74DCHL2122">
             </label>
+
+            <label>
+              <span>Tên lớp</span>
+              <input id="className" name="className" required placeholder="VD: 74DCHL21">
+            </label>
+
+            <div class="field-group" role="group" aria-labelledby="participationModeLabel">
+              <span id="participationModeLabel">Hình thức tham gia</span>
+              <label class="check-row">
+                <input id="participationInPerson" name="participationMode" type="checkbox" value="Trực tiếp">
+                <span>Trực tiếp</span>
+              </label>
+              <label class="check-row">
+                <input id="participationOnline" name="participationMode" type="checkbox" value="Trực tuyến (online)">
+                <span>Trực tuyến (online)</span>
+              </label>
+            </div>
 
             <label class="check-row">
               <input id="confirmed" name="confirmed" type="checkbox" required>

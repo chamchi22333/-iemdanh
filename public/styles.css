@@ -364,6 +364,13 @@ label em {
   font-weight: 400;
 }
 
+.field-group {
+  display: grid;
+  gap: 8px;
+  color: var(--ink);
+  font-weight: 700;
+}
+
 .check-row {
   display: flex;
   align-items: center;

@@ -5,9 +5,31 @@ create table if not exists public.attendance (
   full_name text not null,
   unit text not null,
   student_id text not null,
+  class_name text not null,
+  participation_mode text not null,
   confirmed text not null default 'Có',
   constraint attendance_student_id_key unique (student_id)
 );
+
+alter table public.attendance
+add column if not exists class_name text;
+
+alter table public.attendance
+add column if not exists participation_mode text;
+
+update public.attendance
+set class_name = ''
+where class_name is null;
+
+update public.attendance
+set participation_mode = ''
+where participation_mode is null;
+
+alter table public.attendance
+alter column class_name set not null;
+
+alter table public.attendance
+alter column participation_mode set not null;
 
 alter table public.attendance enable row level security;
 

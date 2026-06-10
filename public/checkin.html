@@ -29,6 +29,23 @@
               <input id="studentId" name="studentId" required placeholder="VD: 74DCHL2122">
             </label>
 
+            <label>
+              <span>Tên lớp</span>
+              <input id="className" name="className" required placeholder="VD: 74DCHL21">
+            </label>
+
+            <div class="field-group" role="group" aria-labelledby="participationModeLabel">
+              <span id="participationModeLabel">Hình thức tham gia</span>
+              <label class="check-row">
+                <input id="participationInPerson" name="participationMode" type="checkbox" value="Trực tiếp">
+                <span>Trực tiếp</span>
+              </label>
+              <label class="check-row">
+                <input id="participationOnline" name="participationMode" type="checkbox" value="Trực tuyến (online)">
+                <span>Trực tuyến (online)</span>
+              </label>
+            </div>
+
             <label class="check-row">
               <input id="confirmed" name="confirmed" type="checkbox" required>
               <span>Xác nhận tham gia: Có</span>
